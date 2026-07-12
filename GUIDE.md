@@ -80,9 +80,18 @@ Create a new folder and help me learn game theory basics
 Create a new folder and help me learn personal income tax
 ```
 
-Claude will immediately generate:
-- `syllabus.md` — course syllabus (defines all abilities you'll master)
+On a new topic the tutor first asks **one short preference round** (at most 4 questions: your goal, relevant background, explanation style, scope) — the answers are stored as "Learner Notes" in the syllabus and every lesson is fitted to them. It only asks what your request didn't already answer.
+
+Then Claude immediately generates:
+- `syllabus.md` — course syllabus (defines all abilities you'll master, with a progress bar and a module dependency map)
 - `01.md` — your first lesson document
+
+Two knobs you can set in your first message (both optional):
+
+- **Depth** — `simple` / `standard` (default) / `deep`
+- **Length** — standard (~3-5 modules) or **extended** (~12-20 modules grouped into Parts): say *"marathon course on X"* or *"extended course on X"*
+
+You can also ground a course in your own materials: *"learn X from ./books"* scans a folder of PDFs, builds a `sources.md` manifest, and cites your books throughout the course.
 
 **Setup complete.** Here's how to use it.
 
@@ -95,8 +104,9 @@ Claude will immediately generate:
 Open the generated `.md` file in your text editor. Each document contains:
 
 - **Prerequisites / Difficulty / Estimated reading time**
-- **Main content** (knowledge with bold annotations and examples)
-- **Thought questions** (2–3 questions, no answers given, designed to deepen your thinking)
+- **Main content** (knowledge with bold annotations, examples, and ⚠️ common-misconception boxes; every Part includes at least one 🌍 real-world artifact, not just textbook examples)
+- **Thought questions** (2–3 questions, no answers given; from lesson 03 one is a 🔄 spiral question recalling earlier material)
+- **🎯 Practice arena** (for hands-on skills: a generated exercise file under `practice/` with concrete tasks you do in the real tool — optional but recommended)
 - **Feedback section** (where you write your feedback)
 
 ### 2. Annotate Your Confusions
@@ -119,8 +129,9 @@ You can place annotations anywhere in the text, as many as you want. These annot
 
 At the bottom of the document in the "Your Feedback" section, write:
 
-- Your answers to the thought questions (try to reason through them yourself — wrong answers are fine)
+- Your answers to the thought questions (try to reason through them yourself — wrong answers are fine), each with a **confidence rating (1–5)**. Confident-but-wrong answers get flagged 🚩 and re-taught first — that's the point, so rate honestly
 - Your insights, confusions, or topics you'd like the next lesson to dive deeper into
+- How the 🎯 practice-arena tasks went, if you did them
 - Anything else you want to say
 
 ### 4. Tell the Tutor You've Finished Reading
@@ -143,7 +154,14 @@ The next document's opening will include:
 
 ### 5. Repeat Until Course Completion
 
-When all mastery items in the syllabus are covered, the system automatically generates an **evaluation article** (no new content — final understanding confirmation). After reading the evaluation, the system auto-generates `summary.md` (a complete course summary).
+In **extended courses**, each Part ends with a **part evaluation** ("mid-boss"): a Part Challenge over that Part's items plus a **Feynman gate** — you explain the Part's core in plain language, and it's graded (with a Part rank) at the start of the next lesson.
+
+When all mastery items in the syllabus are covered, the system automatically generates the **final evaluation article** (no new content): a Final Challenge spanning the whole syllabus — and in extended courses a **capstone mini-project** exercising every Part. After you submit your answers, the system grades them, awards a **course rank (S/A/B/C)**, and auto-generates:
+
+- `summary.md` — complete course summary with a completion certificate and your rank
+- `cheatsheet.md` — a dense quick reference built for lookup-while-doing
+
+Completed topics get **spaced flash reviews**: about a week later (then 30, then 90 days) the tutor offers a quick 3-question review to lock the material in. Always optional.
 
 ---
 
@@ -184,6 +202,22 @@ You can study multiple topics simultaneously. When entering Claude Code, tell th
 ```
 I want to continue studying Python decorators, I've finished reading 02.md
 ```
+
+Each course keeps its own Learner Notes — preferences never leak between unrelated topics.
+
+### Side Quests
+
+If a `???` annotation shows strong curiosity about something outside the syllabus, the tutor may offer an optional **side quest** (`sq-01.md` …) — a one-off detour article. Side quests never block or affect course progress, and you can always decline.
+
+### Source-Grounded Courses
+
+Point the tutor at your own library:
+
+```
+Learn statistical mechanics from ./books
+```
+
+It skims the tables of contents, writes a `sources.md` manifest (which chapters map to which modules, and what it left out — overridable), then teaches *through your books*: real citations (book, chapter, page), further-reading pointers per lesson, and an "Out of Scope" section that honestly lists what your corpus doesn't cover.
 
 ### Slash Commands
 
